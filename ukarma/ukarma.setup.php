@@ -5,7 +5,7 @@
  * Name=Ukarma
  * Category=community-social
  * Description=Universal karma plugin by CMSWorks.ru
- * Version=1.0.0
+ * Version=1.0.1
  * Date=2013-09-30
  * Author=CMSWorks Team
  * Copyright=Copyright (c) CMSWorks.ru
@@ -20,6 +20,7 @@
 karma_rate=01:string::5:Минимальная карма для влияния на карму других пользователей (>=)
 karma_addtopic=02:string::null:Минимальная карма для создания новых тем на форуме (null - не учитывать)
 karma_addpost=03:string::null:Минимальная карма для создания новых постов на форуме (null - не учитывать)
+karma_daylimit=04:string::0:Количество оценок в сутки
 [END_COT_EXT_CONFIG]
 ==================== */
 
