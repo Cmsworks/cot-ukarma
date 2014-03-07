@@ -102,6 +102,14 @@ function cot_ukarma_checkenablescore ($userid, $area = '', $code = '')
 			if($score_count >= $cfg['plugin']['ukarma']['karma_daylimit']) $score_enabled = false;
 		}
 		
+		if($cfg['plugin']['ukarma']['karma_personaldaylimit'] > 0)
+		{
+			$lastdate = $sys['now'] - 24*60*60;
+			$score_count = $db->query("SELECT COUNT(*) FROM $db_ukarma WHERE ukarma_ownerid=".$usr['id']." AND ukarma_userid=".$userid." AND ukarma_date >".$lastdate)->fetchColumn();
+			
+			if($score_count >= $cfg['plugin']['ukarma']['karma_personaldaylimit']) $score_enabled = false;
+		}
+		
 		return $score_enabled;
 	}
 }
