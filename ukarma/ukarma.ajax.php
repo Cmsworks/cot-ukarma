@@ -38,6 +38,9 @@ if($m == 'add')
 		$rscore['ukarma_code'] = $code;
 
 		$db->insert($db_ukarma, $rscore);
+		
+		$score = $db->query("SELECT SUM(ukarma_value) FROM $db_ukarma WHERE ukarma_userid=".$userid)->fetchColumn();
+		$db->update($db_users, array('user_ukarma' => $score), "user_id=".$userid);
 	}
 }
 

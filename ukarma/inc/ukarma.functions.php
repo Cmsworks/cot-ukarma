@@ -20,23 +20,30 @@ cot::$db->registerTable('ukarma');
 
 function cot_ukarma ($userid, $area = 'users', $code = '', $onlyscore = false)
 {
-	global $db, $cfg, $db_ukarma;
+	global $db, $cfg, $db_ukarma, $db_users;
 
-	$where['ukarma_userid'] = "ukarma_userid=".$userid;
-	
-	if(!empty($area) && $area != 'users')
+	if($area == 'users' && $db->fieldExists($db_users, "user_ukarma"))
 	{
-		$where['ukarma_area'] = "ukarma_area='".$area."'";
+		$score = $db->query("SELECT user_ukarma FROM $db_users WHERE user_id=".$userid)->fetchColumn();
 	}
-	
-	if(!empty($code))
+	else
 	{
-		$where['ukarma_code'] = "ukarma_code='".$code."'";
+		$where['ukarma_userid'] = "ukarma_userid=".$userid;
+
+		if(!empty($area) && $area != 'users')
+		{
+			$where['ukarma_area'] = "ukarma_area='".$area."'";
+		}
+
+		if(!empty($code))
+		{
+			$where['ukarma_code'] = "ukarma_code='".$code."'";
+		}
+
+		$where = ($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+
+		$score = $db->query("SELECT SUM(ukarma_value) FROM $db_ukarma $where")->fetchColumn();
 	}
-	
-	$where = ($where) ? 'WHERE ' . implode(' AND ', $where) : '';
-	
-	$score = $db->query("SELECT SUM(ukarma_value) FROM $db_ukarma $where")->fetchColumn();
 	
 	if($onlyscore) return (!empty($score)) ? $score : 0;
 		
@@ -94,7 +101,7 @@ function cot_ukarma_checkenablescore ($userid, $area = '', $code = '')
 		$score_isset = (bool)$db->query("SELECT ukarma_id FROM $db_ukarma $where")->fetch();
 		$score_enabled = (!$score_isset) ? true : false;
 		
-		if($cfg['plugin']['ukarma']['karma_daylimit'] > 0)
+		if($cfg['plugin']['ukarma']['karma_daylimit'] > 0 && !cot_auth('plug', 'ukarma', 'A'))
 		{
 			$lastdate = $sys['now'] - 24*60*60;
 			$score_count = $db->query("SELECT COUNT(*) FROM $db_ukarma WHERE ukarma_ownerid=".$usr['id']." AND ukarma_date >".$lastdate)->fetchColumn();
@@ -102,7 +109,7 @@ function cot_ukarma_checkenablescore ($userid, $area = '', $code = '')
 			if($score_count >= $cfg['plugin']['ukarma']['karma_daylimit']) $score_enabled = false;
 		}
 		
-		if($cfg['plugin']['ukarma']['karma_personaldaylimit'] > 0)
+		if($cfg['plugin']['ukarma']['karma_personaldaylimit'] > 0 && !cot_auth('plug', 'ukarma', 'A'))
 		{
 			$lastdate = $sys['now'] - 24*60*60;
 			$score_count = $db->query("SELECT COUNT(*) FROM $db_ukarma WHERE ukarma_ownerid=".$usr['id']." AND ukarma_userid=".$userid." AND ukarma_date >".$lastdate)->fetchColumn();
