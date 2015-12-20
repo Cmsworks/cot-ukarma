@@ -15,6 +15,7 @@ defined('COT_CODE') or die('Wrong URL.');
 /**
  * Module Config
  */
+$L['ukarma_title']	= "Карма";
 $L['cfg_karma_rate'] = array('Минимальная карма для влияния на карму других пользователей', '');
 $L['cfg_karma_addtopic'] = array('Минимальная карма для создания новых тем на форуме (null - не учитывать)', '');
 $L['cfg_karma_addpost'] = array('Минимальная карма для создания новых постов на форуме (null - не учитывать)', '');
