@@ -18,7 +18,7 @@ Hooks=standalone
 defined('COT_CODE') or die('Wrong URL');
 
 list($pn, $d, $d_url) = cot_import_pagenav('d', $cfg['maxrowsperpage']);
-
+$out['subtitle'] = $L['ukarma_title'];
 $t = new XTemplate(cot_tplfile(array('ukarma', 'statistics'), 'plug'));
 
 $where = array();
@@ -102,9 +102,10 @@ foreach ($sqllist_rowset as $score)
 			break;
 		
 		case 'com' :
-			require_once cot_incfile('comments', 'plug');			
-			$pag = $db->query("SELECT * FROM $db_com WHERE com_id=".$score['ukarma_code']." AND com_code='page'")->fetch();
-			$page_url = (!empty($page['page_al'])) ? cot_url('page', 'c='.$pag['pag_cat'].'&al='.$pag['page_alias'].'') : cot_url('page', 'c='.$pag['pag_cat'].'&id='.$pag['page_id'].'');
+			require_once cot_incfile('comments', 'plug');	
+			require_once cot_incfile('page', 'module');			
+			$pag = $db->query("SELECT c.*, p.* FROM $db_com AS c LEFT JOIN $db_pages AS p ON c.com_code = p.page_id WHERE c.com_id=".$score['ukarma_code']." AND c.com_area='page'")->fetch();
+			$page_url = (!empty($pag['page_alias'])) ? cot_url('page', 'c='.$pag['page_cat'].'&al='.$pag['page_alias'])."#c".$score['ukarma_code'] : cot_url('page', 'c='.$pag['page_cat'].'&id='.$pag['page_id'])."#c".$score['ukarma_code'];
 			$page_title = $pag['page_title'];
 			break;
 	
