@@ -5,7 +5,7 @@
  * Name=Ukarma
  * Category=community-social
  * Description=Universal karma plugin by CMSWorks.ru
- * Version=1.0.4
+ * Version=1.0.5
  * Date=2013-09-30
  * Author=CMSWorks Team
  * Copyright=Copyright (c) CMSWorks.ru
